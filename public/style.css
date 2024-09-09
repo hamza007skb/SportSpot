@@ -462,13 +462,16 @@ html {
 }
 
 .pitch-pictures {
-  background-color: #646464;
+  height: 500px; /* Adjust height as needed */
+  overflow: hidden; /* Hide overflow if necessary */
 }
 
-.image-stadium {
-  height: 45vh;
-  width: 100%;
+.hero-slider {
+  height: 100%;
+  max-height: 500px;
 }
+
+
 
 .pitch-price {
   font-size: 20px;
@@ -537,6 +540,10 @@ html {
   cursor: pointer;
   background-color: #428779;
   color: white;
+}
+
+.selected {
+  background-color: #95d2b3;
 }
 
 .pitch-facility span {
@@ -670,7 +677,7 @@ html {
   background-color: #95d2b3;
 }
 
-.submit-button {
+.slots-button {
   width: 100%;
   padding: 15px;
   background-color: #55ad9b;
@@ -679,6 +686,51 @@ html {
   border-radius: 5px;
   margin-top: 1rem;
   font-size: 1rem;
+  cursor: pointer;
+}
+
+.available-slots {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 160px;
+  padding-bottom: 20px;
+}
+
+.slot-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slot-item {
+  width: 200px;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.slot-item:hover {
+  background-color: #e0e0e0;
+}
+
+.slot-item.selected {
+  background-color: #95d2b3;
+}
+
+.book-button {
+  width: 100%;
+  padding: 7px 30px;
+  background-color: #55ad9b;
+  color: white;
+  border: none;
+  margin-top: 1rem;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -691,6 +743,9 @@ html {
 }
 
 .month {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -725,6 +780,23 @@ html {
   border: 2px solid #a6ce39;
 }
 
+.arrow-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding-bottom: 10px;
+}
+
+.arrow-image {
+  width: 25px;
+  height: 25px;
+}
+
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Footer.js */
 .last {
   width: 100%;
@@ -734,4 +806,96 @@ html {
   height: 27px;
   justify-content: center;
   padding: 2px;
+}
+
+.location {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 40px;
+  padding-top: 40px;
+  background-color: #f5f5f5;
+}
+
+.com-logo{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-right: 200px;
+}
+
+.logo{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.logo img{
+  height: 80px;
+  width: 80px;
+  margin-right: 25px;
+}
+
+.logo h1{
+  color: #202899;
+}
+
+.social-link{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.link-img-fb {
+  height: 30px;
+  width: 40px;
+}
+
+.link-img-twit {
+  height: 40px;
+  width: 50px;
+  padding-left: 11px;
+}
+
+.link-img-ig {
+  height: 33px;
+  width: 45px;
+  padding-left: 15px;
+}
+
+.off-loc {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  text-align: left;
+}
+
+.off-loc h1 {
+  color: black;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  border-bottom: 4px solid #55ad9b;
+}
+
+.off-loc h2 {
+  color: black;
+  margin-top: 30px;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  border-bottom: 4px solid #55ad9b;
+}
+
+.off-loc p {
+  z-index: 1;
+  font-size: 20px;
+  color: rgb(66, 66, 66);
 }

@@ -1,14 +1,22 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import HeroSlider, { Slide } from "hero-slider";
 import Booking from "./Booking";
 import Map from "./Map";
 import Review from "./Review";
+import std_icon from "../Assets/sign_Bg.jpeg";
+import stdd_icon from "../Assets/login_Bg.jpeg";
 
 export default function Ground() {
-  const location = useLocation();
-  const { stadium_icon } = location.state || {};
+  // const location = useLocation();
+  // const { stadium_icon } = location.state || {};
   const [reviews, setReviews] = useState([]);
+  const [selectedPitch, setSelectedPitch] = useState(null);
+
+  const handlePitchClick = (pitch) => {
+    setSelectedPitch(pitch);
+  };
 
   const addReview = (review) => {
     setReviews([review, ...reviews]);
@@ -36,11 +44,82 @@ export default function Ground() {
               <br />
             </div>
           </div>
-          {stadium_icon && (
-            <div className="pitch-pictures">
-              <img className="image-stadium" src={stadium_icon} alt="Stadium" />
-            </div>
-          )}
+          <div className="pitch-pictures">
+            <HeroSlider
+              slidingAnimation="left_to_right"
+              orientation="horizontal"
+              initialSlide={1}
+              onBeforeChange={(previousSlide, nextSlide) =>
+                console.log("onBeforeChange", previousSlide, nextSlide)
+              }
+              onChange={(nextSlide) => console.log("onChange", nextSlide)}
+              onAfterChange={(nextSlide) =>
+                console.log("onAfterChange", nextSlide)
+              }
+              style={{ backgroundColor: "rgba(0,0,0,0.33)" }}
+              settings={{
+                slidingDuration: 250,
+                slidingDelay: 100,
+                shouldAutoplay: true,
+                shouldDisplayButtons: true,
+                autoplayDuration: 5000,
+                height: "50vh",
+              }}
+            >
+              <Slide
+                background={{
+                  backgroundImageSrc: std_icon,
+                  backgroundAttachment: "fixed",
+                }}
+                style={{
+                  backgroundSize: "contain", // Ensures the image is fully visible
+                  backgroundPosition: "center", // Centers the image
+                  backgroundRepeat: "no-repeat", // Prevents image repetition
+                  height: "93vh", // Set custom height
+                  width: "100%", // Set custom width
+                }}
+              />
+              <Slide
+                background={{
+                  backgroundImageSrc: stdd_icon,
+                  backgroundAttachment: "fixed",
+                }}
+                style={{
+                  backgroundSize: "contain", // Ensures the image is fully visible
+                  backgroundPosition: "center", // Centers the image
+                  backgroundRepeat: "no-repeat", // Prevents image repetition
+                  height: "93vh", // Set custom height
+                  width: "100%", // Set custom width
+                }}
+              />
+              <Slide
+                background={{
+                  backgroundImageSrc: std_icon,
+                  backgroundAttachment: "fixed",
+                }}
+                style={{
+                  backgroundSize: "contain", // Ensures the image is fully visible
+                  backgroundPosition: "center", // Centers the image
+                  backgroundRepeat: "no-repeat", // Prevents image repetition
+                  height: "93vh", // Set custom height
+                  width: "100%", // Set custom width
+                }}
+              />
+              <Slide
+                background={{
+                  backgroundImageSrc: stdd_icon,
+                  backgroundAttachment: "fixed",
+                }}
+                style={{
+                  backgroundSize: "contain", // Ensures the image is fully visible
+                  backgroundPosition: "center", // Centers the image
+                  backgroundRepeat: "no-repeat", // Prevents image repetition
+                  height: "93vh", // Set custom height
+                  width: "100%", // Set custom width
+                }}
+              />
+            </HeroSlider>
+          </div>
           <p className="pitch-price">Rs.1500/Hour</p>
           <div className="description">
             <h3>Description</h3>
@@ -57,7 +136,7 @@ export default function Ground() {
         </div>
         <div className="calender-map">
           <div className="calender">
-            <Booking />
+            <Booking selectedPitch={selectedPitch} />
           </div>
           <div className="ground-loc">
             <div className="ground-map">
@@ -70,9 +149,24 @@ export default function Ground() {
       <div className="ground-info">
         <p>Pitch Types</p>
         <div className="pitch-type spacing">
-          <span>Pitch - 9 v 9</span>
-          <span>Pitch - 9 v 9</span>
-          <span>Pitch - 9 v 9</span>
+          <span
+            className={`${selectedPitch === "7 v 7" ? "selected" : ""}`}
+            onClick={() => handlePitchClick("7 v 7")}
+          >
+            Pitch - 7 v 7
+          </span>
+          <span
+            className={`${selectedPitch === "8 v 8" ? "selected" : ""}`}
+            onClick={() => handlePitchClick("8 v 8")}
+          >
+            Pitch - 8 v 8
+          </span>
+          <span
+            className={`${selectedPitch === "9 v 9" ? "selected" : ""}`}
+            onClick={() => handlePitchClick("9 v 9")}
+          >
+            Pitch - 9 v 9
+          </span>
         </div>
 
         <p>Stadium Facilities</p>
@@ -103,7 +197,9 @@ export default function Ground() {
             <li key={review.id}>
               <div className="reviewer-name">
                 <p>{review.username}</p>
-                <p className="rev-date">{new Date(review.date).toLocaleDateString()}</p>
+                <p className="rev-date">
+                  {new Date(review.date).toLocaleDateString()}
+                </p>
               </div>
               <p className="per-review">{review.comment}</p>
             </li>

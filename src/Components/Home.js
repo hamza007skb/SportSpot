@@ -19,7 +19,7 @@ export default function Home() {
     <>
       <div className="pages">
         <a href="/">Home</a>
-        <a href="">Reviews</a>
+        <a href="#contact">Contact</a>
       </div>
 
       <div className="nav-style">
@@ -48,7 +48,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="map-grounds">
+            <div className="map-grounds" id="home">
               <div className="grounds-container">
                 <div className="pitches">
                   <img
