@@ -462,16 +462,13 @@ html {
 }
 
 .pitch-pictures {
-  height: 500px; /* Adjust height as needed */
-  overflow: hidden; /* Hide overflow if necessary */
+  height: 500px;
+  overflow: hidden;
 }
 
-.hero-slider {
-  height: 100%;
-  max-height: 500px;
+.active img{
+  height: 500px;
 }
-
-
 
 .pitch-price {
   font-size: 20px;
