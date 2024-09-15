@@ -1,30 +1,73 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import axios from "axios"; // For making API calls
+import axios from "axios";
 import Booking from "./Booking";
 import Map from "./Map";
 import Review from "./Review";
 
 export default function Ground() {
+  const location = useLocation();
   const [groundData, setGroundData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [selectedPitch, setSelectedPitch] = useState(null);
+  const [images, setImages] = useState([]);
+  const [pitches, setPitches] = useState([]);
+  const [pricePer60Mins, setPricePer60Mins] = useState(null);
+  const [pricePer90Mins, setPricePer90Mins] = useState(null);
+  const [selectedPrice, setSelectedPrice] = useState(null); // State for dynamic price
 
-  // Fetch ground data from API
   useEffect(() => {
-    // Example API call to fetch ground details
-    axios
-      .get("https://your-api-url.com/ground/{ground_id}")
-      .then((response) => {
-        setGroundData(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the ground data!", error);
-      });
-  }, []);
+    if (location.state && location.state.ground) {
+      setGroundData(location.state.ground);
+      fetchImages(location.state.ground.id);
+      fetchPitches(location.state.ground.id);
+    }
+  }, [location.state]);
+
+  const fetchImages = async (groundId) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/ground_list/groundimages/${groundId}`
+      );
+      const formattedImages = response.data.images.map(
+        (img) => `data:image/jpeg;base64,${img}`
+      );
+      setImages(formattedImages);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  };
+
+  const fetchPitches = async (groundId) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/ground_list/ground_detail/pitches/${groundId}`
+      );
+      const pitchesData = response.data;
+      setPitches(pitchesData);
+
+      if (pitchesData.length > 0) {
+        setPricePer60Mins(pitchesData[0].price_per_60mins);
+        setPricePer90Mins(pitchesData[0].price_per_90mins || null); // Update for 90 mins
+        setSelectedPrice(pitchesData[0].price_per_60mins); // Default to 60 mins
+      }
+    } catch (error) {
+      console.error("Error fetching pitches:", error);
+    }
+  };
 
   const handlePitchClick = (pitch) => {
     setSelectedPitch(pitch);
+  };
+
+  const handleDurationChange = (duration) => {
+    if (duration === "60 Mins") {
+      setSelectedPrice(pricePer60Mins);
+    } else if (duration === "90 Mins") {
+      setSelectedPrice(pricePer90Mins);
+    }
+    // Add more conditions if you have other durations (e.g., 120 mins)
   };
 
   const addReview = (review) => {
@@ -32,7 +75,7 @@ export default function Ground() {
   };
 
   if (!groundData) {
-    return <p>Loading...</p>; // Show loading state while data is being fetched
+    return <p>Loading...</p>;
   }
 
   return (
@@ -42,19 +85,29 @@ export default function Ground() {
           <div className="info-text-ground">
             <div className="name-rev">
               <div className="name-rating-ground">
-                <h3>{groundData.name}</h3> {/* Ground Name */}
+                <h3>{groundData.name}</h3>
               </div>
               <div className="rating-ground">
-                <span>{groundData.rating}/5 ⭐</span> {/* Ground Rating */}
+                <span>
+                  {groundData.rating
+                    ? `${groundData.rating}/5 ⭐`
+                    : "No rating available"}
+                </span>
               </div>
             </div>
             <div className="venue">
-              <p>Stadium Type: {groundData.stadiumType}</p> {/* Stadium Type */}
-              <p>Sports Hours: {groundData.sportsHours}</p> {/* Sports Hours */}
+              <p>
+                Stadium Type:{" "}
+                {groundData.stadiumType || "OutDoor"}
+              </p>
+              <p>
+                Sports Hours:{" "}
+                {groundData.sportsHours || "01:00PM - 01:00AM"}
+              </p>
             </div>
             <div className="loc">
               <FaMapMarkerAlt className="icon" />
-              <p>{groundData.location}</p> {/* Ground Location */}
+              <p>{groundData.address || "No location available"}</p>
             </div>
           </div>
           <div className="pitch-pictures">
@@ -64,22 +117,28 @@ export default function Ground() {
               data-bs-ride="carousel"
             >
               <div className="carousel-inner">
-                <div className="carousel-item active">
-                  <img
-                    src={groundData.images[0]}
-                    className="d-block w-100"
-                    alt="Ground Picture"
-                  />
-                </div>
-                {groundData.images.slice(1).map((img, index) => (
-                  <div key={index} className="carousel-item">
-                    <img
-                      src={img}
-                      className="d-block w-100"
-                      alt="Ground Picture"
-                    />
-                  </div>
-                ))}
+                {images.length > 0 ? (
+                  <>
+                    <div className="carousel-item active">
+                      <img
+                        src={images[0]}
+                        className="d-block w-100"
+                        alt="Ground Picture"
+                      />
+                    </div>
+                    {images.slice(1).map((img, index) => (
+                      <div key={index} className="carousel-item">
+                        <img
+                          src={img}
+                          className="d-block w-100"
+                          alt="Ground Picture"
+                        />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <p>No images available</p>
+                )}
               </div>
               <button
                 className="carousel-control-prev"
@@ -107,17 +166,21 @@ export default function Ground() {
               </button>
             </div>
           </div>
-          <p className="pitch-price">Rs.{groundData.price}/Hour</p>{" "}
-          {/* Ground Price */}
+          <p className="pitch-price">
+            Rs.{selectedPrice || "No price available"}/Hour
+          </p>
           <div className="description">
             <h3>Description</h3>
-            <p>{groundData.description}</p> {/* Ground Description */}
+            <p>{groundData.description || "No description available"}</p>
           </div>
         </div>
 
         <div className="calender-map">
           <div className="calender">
-            <Booking selectedPitch={selectedPitch} />
+            <Booking
+              selectedPitch={selectedPitch}
+              onDurationChange={handleDurationChange}
+            />
           </div>
           <div className="ground-loc">
             <div className="ground-map">
@@ -130,30 +193,36 @@ export default function Ground() {
       <div className="ground-info">
         <p>Pitch Types</p>
         <div className="pitch-type spacing">
-          {groundData.pitchTypes.map((pitchType, index) => (
-            <span
-              key={index}
-              className={`${selectedPitch === pitchType ? "selected" : ""}`}
-              onClick={() => handlePitchClick(pitchType)}
-            >
-              {pitchType}
-            </span>
-          ))}
+          {pitches.length > 0 ? (
+            pitches.map((pitch, index) => (
+              <span
+                key={index}
+                className={selectedPitch === pitch ? "selected" : ""}
+                onClick={() => handlePitchClick(pitch)}
+              >
+                {pitch.length} / {pitch.width} m
+              </span>
+            ))
+          ) : (
+            <p>No pitch types available</p>
+          )}
         </div>
 
         <p>Stadium Facilities</p>
         <div className="pitch-facility spacing">
-          {groundData.facilities.map((facility, index) => (
-            <span key={index}>{facility}</span>
-          ))}
+          <span>Canteen</span>
+          <span>Changing Room</span>
+          <span>Toilets</span>
+          <span>Parking</span>
         </div>
 
         <p>Equipment Provided</p>
         <div className="pitch-equipment spacing-1rem">
-          {groundData.equipment.map((item, index) => (
-            <span key={index}>{item}</span>
-          ))}
+          <span>Football</span>
+          <span>Paddle</span>
+          <span>Bat n Ball</span>
         </div>
+
       </div>
 
       <div className="nav-style">

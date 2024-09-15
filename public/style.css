@@ -294,6 +294,12 @@ html {
   color: black;
 }
 
+.games {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .map-grounds {
   display: flex;
   flex-direction: row;
@@ -307,12 +313,6 @@ html {
   align-items: center;
   width: 65%;
   padding-left: 35px;
-}
-
-.games {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
 }
 
 .pitches {
@@ -340,7 +340,7 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 10px 0px;
+  padding: 10px 0px;
 }
 
 .info-text {
@@ -348,24 +348,21 @@ html {
   flex-direction: column;
   justify-content: left;
   align-items: start;
-  width: 280px;
+  width: 100%;
+  padding: 5px 5px;
 }
 
-.name-rating {
+.name-review {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  width: 280px;
-  margin: 20px 0px;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
-.rating {
-  display: flex;
-  flex-direction: row;
-  justify-content: right;
-  align-items: end;
-  width: 148px;
+.info-text p {
+  margin: 0px;
 }
 
 .info button {
@@ -466,7 +463,7 @@ html {
   overflow: hidden;
 }
 
-.active img{
+.active img {
   height: 500px;
 }
 
@@ -528,7 +525,7 @@ html {
 
 .pitch-type span {
   font-size: 18px;
-  border: 2px solid #95d2b3;
+  border: 2px solid #5cd79a;
   border-radius: 10px;
   padding: 15px 12rem;
 }
@@ -540,7 +537,7 @@ html {
 }
 
 .selected {
-  background-color: #95d2b3;
+  background-color: #41d98d;
 }
 
 .pitch-facility span {
@@ -815,7 +812,7 @@ button[disabled] {
   background-color: #f5f5f5;
 }
 
-.com-logo{
+.com-logo {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -823,7 +820,7 @@ button[disabled] {
   padding-right: 200px;
 }
 
-.logo{
+.logo {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -832,23 +829,22 @@ button[disabled] {
   padding-bottom: 20px;
 }
 
-.logo img{
+.logo img {
   height: 80px;
   width: 80px;
   margin-right: 25px;
 }
 
-.logo h1{
+.logo h1 {
   color: #202899;
 }
 
-.social-link{
+.social-link {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
-
 
 .link-img-fb {
   height: 30px;
