@@ -1,10 +1,7 @@
-// export default Booking;
 import React, { useState, useEffect } from "react";
 import Calendar from "./Calender";
 
-// Utility function to decode JWT token
-
-const Booking = ({ selectedPitch, onDurationChange }) => {
+const Booking = ({ selectedPitch, onDurationChange, selectedGroundID }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDuration, setSelectedDuration] = useState("60 Mins");
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -30,11 +27,11 @@ const Booking = ({ selectedPitch, onDurationChange }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = sessionStorage.getItem("authToken"); // Use sessionStorage
     if (token) {
       const decodedToken = parseJwt(token);
       if (decodedToken && decodedToken.email) {
-        setUserEmail(decodedToken.email);
+        setUserEmail(decodedToken.email); // Set user email from token
       } else {
         alert("Unable to decode token or email is missing in token");
       }
@@ -42,9 +39,10 @@ const Booking = ({ selectedPitch, onDurationChange }) => {
       alert("No token found. Please log in.");
     }
   }, []);
+
   const slotsData = {
-    "60 Mins": ["08:30 PM", "09:30 PM", "10:30 PM", "11:30 PM"],
-    "90 Mins": ["08:30 PM", "10:00 PM", "11:30 PM"],
+    "60 Mins": ["20:30", "21:30", "22:30", "23:30"],
+    "90 Mins": ["20:30", "22:00", "23:30"],
   };
 
   const handleDurationClick = (duration) => {
@@ -62,28 +60,31 @@ const Booking = ({ selectedPitch, onDurationChange }) => {
   };
 
   const handleBooking = async () => {
-    const dateToBook = selectedDate || new Date(); // Default to today's date if no date selected
-    if (!selectedSlot || !selectedPitch || !userEmail) {
-      alert(
-        "Please select a time slot, pitch type, and ensure you are logged in!"
-      );
-      return;
-    }
-
-    const bookingDate = selectedDate || new Date();
+    const dateToBook = selectedDate || new Date();
+  
+    // Utility function to format date and time
+    const formatDateTime = (date, time) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day} ${time}:00`;
+    };
+  
+    const start_time = formatDateTime(dateToBook, selectedSlot);
+  
+    const duration_seconds = selectedDuration === "60 Mins" ? 60 * 60 : 90 * 60;
+  
     const bookingDetails = {
       pitch_id: selectedPitch,
-      ground_id: 1, // Update this with the actual ground_id as needed
+      ground_id: selectedGroundID, // Update this with the actual ground_id as needed
       user_email: userEmail,
-      start_time: new Date(
-        `${bookingDate.toISOString().split("T")[0]}T${selectedSlot}:00`
-      ),
-      duration: selectedDuration === "60 Mins" ? 60 : 90, // Assuming duration in minutes
+      start_time: start_time, // Use the formatted start_time
+      duration: duration_seconds, // Send duration as seconds
       payment_status: "pending",
     };
-
-    console.log("Booking details:", bookingDetails);
-
+  
+    console.log("Booking details:", bookingDetails);  // Log booking details
+  
     try {
       const response = await fetch("http://127.0.0.1:8000/ground_booking/", {
         method: "POST",
@@ -92,9 +93,8 @@ const Booking = ({ selectedPitch, onDurationChange }) => {
         },
         body: JSON.stringify(bookingDetails),
       });
-
+  
       const result = await response.json();
-
       if (response.ok) {
         alert(`You Booked it! \nDetails: ${JSON.stringify(bookingDetails, null, 2)}`);
       } else {
@@ -104,6 +104,7 @@ const Booking = ({ selectedPitch, onDurationChange }) => {
       alert("An error occurred");
     }
   };
+  
 
   return (
     <div className="booking-container">

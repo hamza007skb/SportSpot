@@ -29,9 +29,9 @@ export default function AuthPage(props) {
       const result = await response.json();
   
       if (response.ok) {
-        // Store the JWT token in localStorage
-        localStorage.setItem("authToken", result.access_token);
-        localStorage.setItem("refreshToken", result.refresh_token); // if using refresh token
+        // Store the JWT token in sessionStorage instead of localStorage
+        sessionStorage.setItem("authToken", result.access_token);
+        sessionStorage.setItem("refreshToken", result.refresh_token); // If you're using a refresh token
         alert(result.message || "Success");
       } else {
         alert(result.detail || "Something went wrong");
@@ -40,7 +40,6 @@ export default function AuthPage(props) {
       alert("An error occurred");
     }
   };
-  
 
   const ChangeAuthSign = () => {
     props.toggleAuthMode("SignUp");

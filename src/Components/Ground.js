@@ -58,7 +58,7 @@ export default function Ground() {
   };
 
   const handlePitchClick = (pitch) => {
-    setSelectedPitch(pitch);
+    setSelectedPitch(pitch.id);
   };
 
   const handleDurationChange = (duration) => {
@@ -180,6 +180,7 @@ export default function Ground() {
             <Booking
               selectedPitch={selectedPitch}
               onDurationChange={handleDurationChange}
+              selectedGroundID={groundData.id}
             />
           </div>
           <div className="ground-loc">
